@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Cancer Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #056cfc;
+            margin: 0;
+            padding: 0;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .upload-box {
+            background-color: rgba(123, 137, 155, 0.1);
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .upload-box input[type="file"] {
+            display: none;
+        }
+        .upload-box label {
+            display: block;
+            font-size: 1em;
+            color: #252729;
+            cursor: pointer;
+        }
+        .upload-box input[type="submit"] {
+            background-color: #056cfc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .upload-box input[type="submit"]:hover {
+            background-color: #0458d1;
+        }
+        #results-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(240, 240, 240, 0.8);
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Skin Cancer Classifier</h1>
+        <div class="upload-box">
+            <form id="upload-form" enctype="multipart/form-data">
+                <label for="file-upload">Upload an image of your skin</label>
+                <input id="file-upload" type="file" name="file" accept="image/*" required>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        <div id="results-section">
+            <h2>Results</h2>
+            <p id="predicted-name"></p>
+        </div>
+    </div>
+    <script>
+        const uploadForm = document.getElementById('upload-form');
+        const resultsSection = document.getElementById('results-section');
+        const predictedNameElement = document.getElementById('predicted-name');
+
+        uploadForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(uploadForm);
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    predictedNameElement.textContent = `Predicted Name: ${data.predicted_name}`;
+                    resultsSection.style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file.');
+            }
+        });
+    </script>
+</body>
+</html>
