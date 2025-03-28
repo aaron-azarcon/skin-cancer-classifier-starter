@@ -12,31 +12,63 @@
             margin: 0;
             padding: 0;
         }
+        .navbar {
+            display: flex;
+            justify-content: space-between; /* Keep items on opposite ends */
+            align-items: center;
+            background-color: white;
+            color: #056cfc;
+            padding: 15px 40px; /* Add horizontal padding to move items inward */
+            margin-top: 12px; /* Add top margin */
+        }
+        .navbar .brand {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        .navbar .brand span {
+            font-weight: normal; /* 'Scan' is not bold */
+            font-size: 0.6em;
+        }
+        .navbar .nav-links a {
+            color: #056cfc;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        .navbar .nav-links a:hover {
+            text-decoration: underline;
+        }
         .content {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Align content towards the top */
             align-items: center;
-            height: 100vh;
+            height: 80vh; /* Reduce the height to move content upwards */
             text-align: center;
+            margin-top: 20px; /* Add some margin at the top */
         }
         .upload-box {
             background-color: rgba(123, 137, 155, 0.1);
             border-radius: 10px;
-            width: 300px;
+            width: 200px;
+            min-height: 110px;
             padding: 20px;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px; /* Reduce the margin to move it closer to the title */
             border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .upload-box input[type="file"] {
-            display: none;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+            background-size: cover; /* Ensure the image covers the box */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent image repetition */
         }
         .upload-box label {
             display: block;
-            font-size: 1em;
+            font-size: 0.9em;
             color: #252729;
             cursor: pointer;
+            transition: color 0.3s ease; /* Smooth transition for text color */
+        }
+        .upload-box input[type="file"] {
+            display: none;
         }
         .upload-box input[type="submit"] {
             background-color: #056cfc;
@@ -50,6 +82,27 @@
         .upload-box input[type="submit"]:hover {
             background-color: #0458d1;
         }
+        /* Hover effect for the upload box */
+        .upload-box:hover {
+            background-color: rgba(3, 1, 18, 0.6); /* Darker background */
+        }
+        .upload-box:hover label {
+            color: #f0f0f0; /* Lighter text color */
+        }
+        /* Hover effect for the .apng image */
+        .upload-box:hover img {
+            filter: brightness(1.8); /* Make the image brighter */
+            transition: filter 0.3s ease; /* Smooth transition for brightness */
+        }
+        .upload-box img,
+        .upload-box label {
+            position: relative; /* Ensure they stay in place initially */
+            z-index: 1; /* Keep them above the background initially */
+        }
+        .upload-box.filled img,
+        .upload-box.filled label {
+            display: none; /* Hide the initial content when an image is uploaded */
+        }
         #results-section {
             margin-top: 20px;
             padding: 20px;
@@ -57,30 +110,289 @@
             border-radius: 10px;
             display: none;
         }
+        #results-section h2 {
+            margin-bottom: 10px;
+        }
+        #results-section p {
+            margin: 5px 0;
+        }
+        .blue-text {
+            color: #056cfc; /* Blue color for "Skin Cancer" */
+        }
+        .black-text {
+            color: black; /* Black color for "Automatic" and "Classifier" */
+        }
+        .content h1 {
+            font-size: 1.2em; /* Reduced font size */
+            line-height: 1.4; /* Adjust line height for better spacing */
+            text-align: center; /* Center-align the text */
+        }
+        .example-images {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Space between the boxes */
+            margin-top: 20px; /* Space above the example images */
+        }
+        .example-box {
+            width: 60px; /* Set the width of each box */
+            height: 60px; /* Set the height of each box */
+            border: 1px solid #ddd; /* Add a border around each box */
+            border-radius: 5px; /* Rounded corners */
+            overflow: hidden; /* Ensure the image fits within the box */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9; /* Light background color */
+            transition: transform 0.3s ease, filter 0.3s ease; /* Smooth transition for hover effects */
+        }
+        .example-box img {
+            width: 100%; /* Make the image fit the box */
+            height: 100%; /* Maintain the aspect ratio */
+            object-fit: cover; /* Ensure the image covers the box */
+            transition: transform 0.3s ease, filter 0.3s ease; /* Smooth transition for hover effects */
+        }
+        /* Hover effect for example images */
+        .example-box:hover {
+            transform: scale(1.1); /* Slightly enlarge the box */
+            filter: brightness(0.8); /* Darken the image */
+        }
+        /* Add this CSS rule for the hover effect on the upload-box with a background image */
+        .upload-box.filled:hover {
+            filter: brightness(0.7); /* Darken the background image */
+            transition: filter 0.3s ease; /* Smooth transition for the darkening effect */
+        }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .upload-button {
+            background-color: #056cfc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            width: 120px; /* Set a fixed width for the button */
+            height: 40px; /* Set a fixed height for the button */
+            text-align: center;
+            display: flex; /* Use flexbox for alignment */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+        }
+
+        .upload-button span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            display: none; /* Hide spinner by default */
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 24px; /* Smaller close button font size */
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        /* Two-column layout for the modal */
+        .modal-columns {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .modal-left {
+            flex: 1;
+            text-align: center;
+        }
+
+        .modal-right {
+            flex: 2;
+            text-align: left;
+        }
+
+        .modal-right p {
+            margin: 10px 0;
+            font-size: 0.9em; /* Smaller font size for modal text */
+        }
+
+        #modal-uploaded-image {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 150px; /* Make the image more rectangular */
+            height: 100px; /* Adjust height for rectangular shape */
+            border-radius: 5px; /* Slightly rounded corners */
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <div class="brand">DermaScan</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+        </div>
+    </div>
     <div class="content">
-        <h1>Skin Cancer Classifier</h1>
-        <div class="upload-box">
+        <h1>
+            <span class="black-text">Automatic</span> 
+            <span class="blue-text">Skin Cancer</span><br>
+            <span class="black-text">Classifier</span>
+        </h1>
+        <div class="upload-box" id="upload-box">
+            <img src="{{ url_for('static', filename='assets/upload_button.apng') }}" 
+                 alt="Example Animation" 
+                 style="width: 15%; height: auto; border-radius: 10px; margin-bottom: 15px;">
             <form id="upload-form" enctype="multipart/form-data">
-                <label for="file-upload">Upload an image of your skin</label>
+                <label for="file-upload" style="margin-top: 10px; display: block;">Upload an image of your <br>skin</br></label>
                 <input id="file-upload" type="file" name="file" accept="image/*" required>
-                <input type="submit" value="Upload">
             </form>
         </div>
+
+        <!-- Example images section -->
+        <p style="color: gray; font-size: 0.7em; text-align: center; margin-bottom: 4px;">
+            ↓ Or try these example skin images
+        </p>
+        <div class="example-images">
+            <div class="example-box">
+                <img src="{{ url_for('static', filename='assets/skin_cancer_3.jpg') }}" alt="Example 1">
+            </div>
+            <div class="example-box">
+                <img src="{{ url_for('static', filename='assets/skin_cancer_4.jpg') }}" alt="Example 2">
+            </div>
+            <div class="example-box">
+                <img src="{{ url_for('static', filename='assets/skin_cancer_sample.jpeg') }}" alt="Example 3">
+            </div>
+            <div class="example-box">
+                <img src="{{ url_for('static', filename='assets/skin_cancer_sample2.jpg') }}" alt="Example 4">
+            </div>
+        </div>
+
+        <!-- Move the upload button under the example images -->
+        <div style="text-align: center; margin-top: 15px;">
+            <button id="upload-button" type="submit" form="upload-form" class="upload-button">
+                <span id="button-text">Upload</span>
+                <div id="spinner" class="spinner"></div>
+            </button>
+        </div>
+
         <div id="results-section">
             <h2>Results</h2>
             <p id="predicted-name"></p>
+            <p id="disease-info"></p>
         </div>
     </div>
+    
+    <!-- Modal for displaying results -->
+    <div id="results-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-columns">
+                <!-- Left Column -->
+                <div class="modal-left">
+                    <h2>Predicted Results</h2>
+                    <img id="modal-uploaded-image" src="" alt="Uploaded Image" style="width: 150px; height: 100px; border-radius: 5px; margin-bottom: 15px;">
+                </div>
+                <!-- Right Column -->
+                <div class="modal-right">
+                    <p id="modal-predicted-label"><strong>Predicted Label:</strong> <span></span></p>
+                    <p id="modal-predicted-name"><strong>Predicted Name:</strong> <span></span></p>
+                    <p id="modal-disease-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const uploadForm = document.getElementById('upload-form');
         const resultsSection = document.getElementById('results-section');
         const predictedNameElement = document.getElementById('predicted-name');
+        const diseaseInfoElement = document.getElementById('disease-info');
+        const uploadButton = document.getElementById('upload-button');
+        const buttonText = document.getElementById('button-text');
+        const spinner = document.getElementById('spinner');
+
+        const modal = document.getElementById('results-modal');
+        const modalPredictedLabel = document.getElementById('modal-predicted-label');
+        const modalPredictedName = document.getElementById('modal-predicted-name');
+        const modalDiseaseInfo = document.getElementById('modal-disease-info');
+        const closeButton = document.querySelector('.close-button');
+        const modalUploadedImage = document.getElementById('modal-uploaded-image');
 
         uploadForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+
+            // Show spinner and hide button text
+            buttonText.style.display = 'none';
+            spinner.style.display = 'block';
+            uploadButton.disabled = true;
 
             const formData = new FormData(uploadForm);
             try {
@@ -91,8 +403,21 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    predictedNameElement.textContent = `Predicted Name: ${data.predicted_name}`;
-                    resultsSection.style.display = 'block';
+
+                    // Extract and display the relevant information
+                    const { predicted_label, predicted_name, disease_info } = data;
+
+                    // Set the predicted label and name separately
+                    modalPredictedLabel.innerHTML = `<strong>Predicted Label:</strong> ${predicted_label}`;
+                    modalPredictedName.innerHTML = `<strong>Predicted Name:</strong> <span>${predicted_name}</span>`;
+
+                    // Set the disease info
+                    modalDiseaseInfo.innerHTML = `
+                        <p><strong>Disease Info:</strong> ${disease_info.description || 'N/A'}</p>
+                    `;
+
+                    // Show the modal
+                    modal.style.display = 'block';
                 } else {
                     const errorData = await response.json();
                     alert(`Error: ${errorData.error}`);
@@ -100,8 +425,114 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while uploading the file.');
+            } finally {
+                // Reset button state
+                buttonText.style.display = 'block';
+                spinner.style.display = 'none';
+                uploadButton.disabled = false;
             }
         });
+
+        // Close the modal when the close button is clicked
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close the modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        const fileInput = document.getElementById('file-upload');
+        const uploadBox = document.getElementById('upload-box');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    // Set the uploaded image as the background of the upload-box
+                    uploadBox.style.backgroundImage = `url('${e.target.result}')`;
+                    uploadBox.classList.add('filled'); // Add a class to hide initial content
+
+                    // Set the uploaded image in the modal
+                    modalUploadedImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file); // Read the file as a data URL
+            }
+        });
+
+        // Add event listeners to example images
+        const exampleImages = document.querySelectorAll('.example-box img');
+
+        exampleImages.forEach((image) => {
+            image.addEventListener('click', () => {
+                const imageSrc = image.src;
+
+                // Set the clicked example image as the uploaded image
+                uploadBox.style.backgroundImage = `url('${imageSrc}')`;
+                uploadBox.classList.add('filled'); // Add a class to hide initial content
+
+                // Set the uploaded image in the modal
+                modalUploadedImage.src = imageSrc;
+
+                // Simulate form submission
+                simulateUpload(imageSrc);
+            });
+        });
+
+        // Function to simulate the upload process
+        async function simulateUpload(imageSrc) {
+            // Show spinner and hide button text
+            buttonText.style.display = 'none';
+            spinner.style.display = 'block';
+            uploadButton.disabled = true;
+
+            try {
+                // Simulate a fetch request to the server
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: JSON.stringify({ image_url: imageSrc }), // Send the image URL as data
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Extract and display the relevant information
+                    const { predicted_label, predicted_name, disease_info } = data;
+
+                    // Set the predicted label and name separately
+                    modalPredictedLabel.innerHTML = `<strong>Predicted Label:</strong> ${predicted_label}`;
+                    modalPredictedName.innerHTML = `<strong>Predicted Name:</strong> <span>${predicted_name}</span>`;
+
+                    // Set the disease info
+                    modalDiseaseInfo.innerHTML = `
+                        <p><strong>Disease Info:</strong> ${disease_info.description || 'N/A'}</p>
+                    `;
+
+                    // Show the modal
+                    modal.style.display = 'block';
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.error}`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the file.');
+            } finally {
+                // Reset button state
+                buttonText.style.display = 'block';
+                spinner.style.display = 'none';
+                uploadButton.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
