@@ -20,9 +20,11 @@
             <span class="black-text">Classifier</span>
         </h1>
         <div class="upload-box" id="upload-box">
-            <img src="{{ url_for('static', filename='assets/upload_button.apng') }}" 
-                 alt="Example Animation" 
-                 style="width: 15%; height: auto; border-radius: 10px; margin-bottom: 15px;">
+            <label for="file-upload" style="cursor: pointer;">
+                <img src="{{ url_for('static', filename='assets/upload_button.apng') }}" 
+                     alt="Example Animation" 
+                     style="width: 15%; height: auto; border-radius: 10px; margin-bottom: 15px;">
+            </label>
             <form id="upload-form" enctype="multipart/form-data">
                 <label for="file-upload" style="margin-top: 10px; display: block;">Upload an image of your <br>skin</br></label>
                 <input id="file-upload" type="file" name="file" accept="image/*" required>
